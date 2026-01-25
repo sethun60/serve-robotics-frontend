@@ -12,26 +12,28 @@ A React app to visualize and control robots in Downtown LA. Shows robot position
 
 ## Setup
 
-You'll need Node.js 18+ and the backend running on port 4000.
+**Important**: You need the backend running first. The frontend won't work without it.
+
+**Requirements:**
+
+- Node.js 18+
+- Backend service running on port 4000 ([see backend repo](https://github.com/sethun60/serve-robotics-backend))
+
+**Install and run:**
 
 ```bash
+# Terminal 1 - Start the backend first
+cd ../serve-robotics-backend
+npm install
+npm start
+
+# Terminal 2 - Then start the frontend
+cd serve-robotics-frontend
 npm install
 npm run dev
 ```
 
-App runs on `http://localhost:3000`
-
-## Running with the backend
-
-```bash
-# Terminal 1
-cd ../serve-robotics-backend
-npm start
-
-# Terminal 2
-cd serve-robotics-frontend
-npm run dev
-```
+Frontend runs on `http://localhost:3000`
 
 ## Testing
 
@@ -62,6 +64,7 @@ src/
 The app polls the backend every 5 seconds (configurable) to get robot positions. You can also manually trigger updates or move robots through the control panel.
 
 API calls go through `robotService.js` which handles:
+
 - Caching responses for 2 seconds
 - Error handling
 - Request timeouts
