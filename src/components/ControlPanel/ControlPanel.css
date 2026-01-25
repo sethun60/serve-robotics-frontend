@@ -116,6 +116,30 @@
 	font-style: italic;
 }
 
+.error-message {
+	color: #ff4444;
+	font-size: 0.75rem;
+	font-weight: 500;
+	margin-top: 0.25rem;
+	display: flex;
+	align-items: center;
+	gap: 0.25rem;
+}
+
+.error-message::before {
+	content: "⚠";
+	font-size: 0.875rem;
+}
+
+.control-group input[type="number"].error {
+	border-color: #ff4444;
+	background-color: #2a1a1a;
+}
+
+.control-group input[type="number"].error:focus {
+	outline-color: #ff4444;
+}
+
 .info-panel {
 	background-color: #1a1a1a;
 	padding: 1rem;

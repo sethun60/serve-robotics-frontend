@@ -30,24 +30,70 @@ function ControlPanel({
 	const [resetCount, setResetCount] = useState(20)
 	const [autoMeters, setAutoMeters] = useState(1)
 	const [autoInterval, setAutoInterval] = useState(60000)
+	
+	// Validation error states
+	const [moveMetersError, setMoveMetersError] = useState('')
+	const [resetCountError, setResetCountError] = useState('')
+	const [autoMetersError, setAutoMetersError] = useState('')
+	const [autoIntervalError, setAutoIntervalError] = useState('')
+	const [refreshIntervalError, setRefreshIntervalError] = useState('')
 
 	const handleResetCountChange = (value: number) => {
-		// Clamp value between 1 and 25
-		const clampedValue = Math.max(1, Math.min(25, value))
-		setResetCount(clampedValue)
+		setResetCount(value)
+		if (isNaN(value) || value < 1) {
+			setResetCountError('Robot count must be at least 1')
+		} else if (value > 25) {
+			setResetCountError('Robot count cannot exceed 25')
+		} else {
+			setResetCountError('')
+		}
 	}
 
 	const handleMoveMetersChange = (value: number) => {
-		// Clamp value between 1 and 100
-		const clampedValue = Math.max(1, Math.min(1000, value))
-		setMoveMeters(clampedValue)
+		setMoveMeters(value)
+		if (isNaN(value) || value < 1) {
+			setMoveMetersError('Move distance must be at least 1 meter')
+		} else if (value > 1000) {
+			setMoveMetersError('Move distance cannot exceed 1000 meters')
+		} else {
+			setMoveMetersError('')
+		}
 	}
 
 	const handleAutoMetersChange = (value: number) => {
-		// Clamp value between 1 and 500
-		const clampedValue = Math.max(1, Math.min(500, value))
-		setAutoMeters(clampedValue)
+		setAutoMeters(value)
+		if (isNaN(value) || value < 1) {
+			setAutoMetersError('Move distance must be at least 1 meter')
+		} else if (value > 500) {
+			setAutoMetersError('Move distance cannot exceed 500 meters')
+		} else {
+			setAutoMetersError('')
+		}
 	}
+
+	const handleAutoIntervalChange = (value: number) => {
+		setAutoInterval(value)
+		if (isNaN(value) || value < 1000) {
+			setAutoIntervalError('Interval must be at least 1000ms (1 second)')
+		} else if (value > 300000) {
+			setAutoIntervalError('Interval cannot exceed 300000ms (5 minutes)')
+		} else {
+			setAutoIntervalError('')
+		}
+	}
+
+	const handleRefreshIntervalChange = (value: number) => {
+		if (isNaN(value) || value < 1000) {
+			setRefreshIntervalError('Refresh interval must be at least 1000ms (1 second)')
+		} else if (value > 60000) {
+			setRefreshIntervalError('Refresh interval cannot exceed 60000ms (1 minute)')
+		} else {
+			setRefreshIntervalError('')
+		}
+		onRefreshIntervalChange(value)
+	}
+
+	const hasAutoErrors = !!autoMetersError || !!autoIntervalError
 
   return (
     <div className="control-panel">
@@ -61,19 +107,24 @@ function ControlPanel({
               id="move-meters"
               type="number"
               min="1"
-              max="100"
+              max="1000"
               value={moveMeters}
               onChange={(e) => handleMoveMetersChange(Number(e.target.value))}
               disabled={loading}
               aria-describedby="move-meters-hint"
+              className={moveMetersError ? 'error' : ''}
             />
           </label>
-          <small id="move-meters-hint" className="hint">
-            Distance robots will move
-          </small>
+          {moveMetersError ? (
+            <small className="error-message" role="alert">{moveMetersError}</small>
+          ) : (
+            <small id="move-meters-hint" className="hint">
+              Distance robots will move (1-1000m)
+            </small>
+          )}
           <button
             onClick={() => onMove(moveMeters)}
-            disabled={loading}
+            disabled={loading || !!moveMetersError}
             aria-label={`Move all robots ${moveMeters} meters`}
           >
             Move Robots
@@ -92,14 +143,19 @@ function ControlPanel({
               onChange={(e) => handleResetCountChange(Number(e.target.value))}
               disabled={loading}
               aria-describedby="reset-count-hint"
+              className={resetCountError ? 'error' : ''}
             />
           </label>
-          <small id="reset-count-hint" className="hint">
-            Number of robots to spawn (max 25)
-          </small>
+          {resetCountError ? (
+            <small className="error-message" role="alert">{resetCountError}</small>
+          ) : (
+            <small id="reset-count-hint" className="hint">
+              Number of robots to spawn (max 25)
+            </small>
+          )}
           <button
             onClick={() => onReset(resetCount)}
-            disabled={loading}
+            disabled={loading || !!resetCountError}
             className="reset-btn"
             aria-label={`Reset to ${resetCount} robots`}
           >
@@ -118,12 +174,16 @@ function ControlPanel({
               id="auto-meters"
               type="number"
               min="1"
-              max="50"
+              max="500"
               value={autoMeters}
               onChange={(e) => handleAutoMetersChange(Number(e.target.value))}
               disabled={loading}
+              className={autoMetersError ? 'error' : ''}
             />
           </label>
+          {autoMetersError && (
+            <small className="error-message" role="alert">{autoMetersError}</small>
+          )}
           
           <label htmlFor="auto-interval">
             Interval (ms)
@@ -134,18 +194,23 @@ function ControlPanel({
               max="300000"
               step="1000"
               value={autoInterval}
-              onChange={(e) => setAutoInterval(Number(e.target.value))}
+              onChange={(e) => handleAutoIntervalChange(Number(e.target.value))}
               disabled={loading}
+              className={autoIntervalError ? 'error' : ''}
             />
           </label>
-          <small className="hint">
-            {(autoInterval / 1000).toFixed(0)} seconds between moves
-          </small>
+          {autoIntervalError ? (
+            <small className="error-message" role="alert">{autoIntervalError}</small>
+          ) : (
+            <small className="hint">
+              {(autoInterval / 1000).toFixed(0)} seconds between moves
+            </small>
+          )}
           
           <div className="button-group">
             <button
               onClick={() => onStartAuto(autoMeters, autoInterval)}
-              disabled={loading}
+              disabled={loading || hasAutoErrors}
               className="start-btn"
               aria-label="Start automatic robot movement"
             >
@@ -191,12 +256,17 @@ function ControlPanel({
                   max="60000"
                   step="1000"
                   value={refreshInterval}
-                  onChange={(e) => onRefreshIntervalChange(Number(e.target.value))}
+                  onChange={(e) => handleRefreshIntervalChange(Number(e.target.value))}
+                  className={refreshIntervalError ? 'error' : ''}
                 />
               </label>
-              <small className="hint">
-                {(refreshInterval / 1000).toFixed(0)} seconds
-              </small>
+              {refreshIntervalError ? (
+                <small className="error-message" role="alert">{refreshIntervalError}</small>
+              ) : (
+                <small className="hint">
+                  {(refreshInterval / 1000).toFixed(0)} seconds
+                </small>
+              )}
             </>
           )}
         </div>
