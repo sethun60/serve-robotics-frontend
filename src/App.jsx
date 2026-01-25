@@ -54,7 +54,6 @@ function App() {
   // Move robots
   const handleMove = useCallback(async (meters) => {
     try {
-      setLoading(true)
       const data = await robotService.moveRobots(meters)
       setRobots(data.robots)
       setLastUpdate(new Date())
@@ -62,15 +61,12 @@ function App() {
     } catch (err) {
       setError(err.message || 'Failed to move robots')
       logger.error('Error moving robots:', err)
-    } finally {
-      setLoading(false)
     }
   }, [])
 
   // Reset robots
   const handleReset = useCallback(async (count) => {
     try {
-      setLoading(true)
       const data = await robotService.resetRobots(count)
       setRobots(data.robots)
       setLastUpdate(new Date())
@@ -78,8 +74,6 @@ function App() {
     } catch (err) {
       setError(err.message || 'Failed to reset robots')
       logger.error('Error resetting robots:', err)
-    } finally {
-      setLoading(false)
     }
   }, [])
 
