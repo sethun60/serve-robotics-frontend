@@ -1,10 +1,12 @@
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import MapView from './components/MapView'
 import ControlPanel from './components/ControlPanel'
 import StatusBar from './components/StatusBar'
 import { robotService } from './services/robotService'
 import { logger } from './services/logger'
 import './App.css'
+
+const MAP_CENTER = [34.0375, -118.25]
 
 function App() {
   const [robots, setRobots] = useState([])
@@ -103,9 +105,6 @@ function App() {
     }
   }, [])
 
-  // Memoize map center for performance
-  const mapCenter = useMemo(() => [34.0375, -118.25], [])
-
   return (
     <div className="app" role="main">
       <header className="app-header">
@@ -147,7 +146,7 @@ function App() {
           
           <MapView 
             robots={robots} 
-            center={mapCenter} 
+            center={MAP_CENTER} 
             loading={loading}
           />
         </main>
