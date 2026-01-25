@@ -82,12 +82,12 @@ describe('ControlPanel', () => {
 			
 			const input = screen.getByLabelText(/Robot Count/i)
 			await user.clear(input)
-			await user.type(input, '35')
+			await user.type(input, '15')
 			
-			const button = screen.getByRole('button', { name: /Reset to 35 robots/i })
+			const button = screen.getByRole('button', { name: /Reset to 15 robots/i })
 			await user.click(button)
 			
-			expect(onReset).toHaveBeenCalledWith(35)
+			expect(onReset).toHaveBeenCalledWith(15)
 		})
 
 		it('disables manual controls when loading', () => {
