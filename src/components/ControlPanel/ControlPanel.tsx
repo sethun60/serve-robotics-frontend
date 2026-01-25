@@ -31,6 +31,24 @@ function ControlPanel({
 	const [autoMeters, setAutoMeters] = useState(1)
 	const [autoInterval, setAutoInterval] = useState(60000)
 
+	const handleResetCountChange = (value: number) => {
+		// Clamp value between 1 and 25
+		const clampedValue = Math.max(1, Math.min(25, value))
+		setResetCount(clampedValue)
+	}
+
+	const handleMoveMetersChange = (value: number) => {
+		// Clamp value between 1 and 100
+		const clampedValue = Math.max(1, Math.min(1000, value))
+		setMoveMeters(clampedValue)
+	}
+
+	const handleAutoMetersChange = (value: number) => {
+		// Clamp value between 1 and 500
+		const clampedValue = Math.max(1, Math.min(500, value))
+		setAutoMeters(clampedValue)
+	}
+
   return (
     <div className="control-panel">
       <section className="control-section" aria-labelledby="manual-controls">
@@ -45,7 +63,7 @@ function ControlPanel({
               min="1"
               max="100"
               value={moveMeters}
-              onChange={(e) => setMoveMeters(Number(e.target.value))}
+              onChange={(e) => handleMoveMetersChange(Number(e.target.value))}
               disabled={loading}
               aria-describedby="move-meters-hint"
             />
@@ -69,15 +87,15 @@ function ControlPanel({
               id="reset-count"
               type="number"
               min="1"
-              max="100"
+              max="25"
               value={resetCount}
-              onChange={(e) => setResetCount(Number(e.target.value))}
+              onChange={(e) => handleResetCountChange(Number(e.target.value))}
               disabled={loading}
               aria-describedby="reset-count-hint"
             />
           </label>
           <small id="reset-count-hint" className="hint">
-            Number of robots to spawn
+            Number of robots to spawn (max 25)
           </small>
           <button
             onClick={() => onReset(resetCount)}
@@ -102,7 +120,7 @@ function ControlPanel({
               min="1"
               max="50"
               value={autoMeters}
-              onChange={(e) => setAutoMeters(Number(e.target.value))}
+              onChange={(e) => handleAutoMetersChange(Number(e.target.value))}
               disabled={loading}
             />
           </label>
