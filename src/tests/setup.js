@@ -1,10 +1,10 @@
 import "@testing-library/jest-dom";
 
 // Mock import.meta
-global.importMeta = { env: { VITE_API_URL: 'http://localhost:3001/api' } };
+global.importMeta = { env: { VITE_API_URL: "http://localhost:3001/api" } };
 
 // Mock Leaflet
-jest.mock('leaflet', () => ({
+jest.mock("leaflet", () => ({
 	divIcon: jest.fn(() => ({})),
 	icon: jest.fn(() => ({})),
 }));

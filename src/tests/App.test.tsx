@@ -1,5 +1,16 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+
+// Mock logger to avoid import.meta issues
+jest.mock('../services/logger', () => ({
+	logger: {
+		info: jest.fn(),
+		warn: jest.fn(),
+		error: jest.fn(),
+		debug: jest.fn(),
+	}
+}))
+
 import App from '../App'
 
 // Mock the robot service before importing
@@ -14,8 +25,6 @@ jest.mock('../services/robotService', () => ({
   }
 }))
 
-import { robotService } from '../services/robotService'
-
 // Mock Leaflet components
 jest.mock('react-leaflet', () => ({
   MapContainer: ({ children }: { children: React.ReactNode }) => <div data-testid="map-container">{children}</div>,
@@ -27,6 +36,8 @@ jest.mock('react-leaflet', () => ({
     fitBounds: jest.fn(),
   }),
 }))
+
+import { robotService } from '../services/robotService'
 
 const mockRobotService = robotService as jest.Mocked<typeof robotService>
 
