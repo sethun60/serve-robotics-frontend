@@ -1,6 +1,6 @@
 import { MapContainer, TileLayer, Polygon, useMap } from 'react-leaflet'
 import { memo, useEffect } from 'react'
-import RobotMarker from './RobotMarker'
+import RobotMarker from '../RobotMarker/RobotMarker'
 import 'leaflet/dist/leaflet.css'
 import './MapView.css'
 
