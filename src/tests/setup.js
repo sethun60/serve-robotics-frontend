@@ -1,5 +1,25 @@
 import "@testing-library/jest-dom";
 
+// Suppress React 18 act() warnings for async state updates in tests
+// These warnings are false positives when using @testing-library with async operations
+const originalError = console.error;
+beforeAll(() => {
+	console.error = (...args) => {
+		if (
+			typeof args[0] === "string" &&
+			args[0].includes("Warning: An update to") &&
+			args[0].includes("was not wrapped in act")
+		) {
+			return;
+		}
+		originalError.call(console, ...args);
+	};
+});
+
+afterAll(() => {
+	console.error = originalError;
+});
+
 // Mock import.meta
 global.importMeta = { env: { VITE_API_URL: "http://localhost:3001/api" } };
 

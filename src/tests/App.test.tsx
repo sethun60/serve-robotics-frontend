@@ -57,6 +57,11 @@ describe('App', () => {
   it('renders the app header', async () => {
     render(<App />)
     expect(screen.getByText('Serve Robotics - DTLA Visualization')).toBeInTheDocument()
+    
+    // Wait for initial data fetch to complete
+    await waitFor(() => {
+      expect(mockRobotService.getRobots).toHaveBeenCalled()
+    })
   })
 
   it('fetches and displays robots on mount', async () => {
@@ -73,15 +78,22 @@ describe('App', () => {
     
     render(<App />)
     
+    // Wait for initial load
     await waitFor(() => {
-      expect(screen.getByLabelText(/move all robots/i)).toBeInTheDocument()
+      expect(mockRobotService.getRobots).toHaveBeenCalled()
     })
     
     const moveButton = screen.getByText('Move Robots')
     await user.click(moveButton)
     
+    // Wait for the move action to complete and state to update
     await waitFor(() => {
       expect(mockRobotService.moveRobots).toHaveBeenCalled()
+    })
+    
+    // Give extra time for all state updates to settle
+    await waitFor(() => {
+      expect(mockRobotService.moveRobots).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -91,15 +103,22 @@ describe('App', () => {
     
     render(<App />)
     
+    // Wait for initial load
     await waitFor(() => {
-      expect(screen.getByText('Reset Robots')).toBeInTheDocument()
+      expect(mockRobotService.getRobots).toHaveBeenCalled()
     })
     
     const resetButton = screen.getByText('Reset Robots')
     await user.click(resetButton)
     
+    // Wait for the reset action to complete and state to update
     await waitFor(() => {
       expect(mockRobotService.resetRobots).toHaveBeenCalled()
+    })
+    
+    // Give extra time for all state updates to settle
+    await waitFor(() => {
+      expect(mockRobotService.resetRobots).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -118,14 +137,18 @@ describe('App', () => {
     const user = userEvent.setup()
     render(<App />)
     
+    // Wait for initial load
     await waitFor(() => {
-      expect(screen.getByLabelText(/auto-refresh map/i)).toBeInTheDocument()
+      expect(mockRobotService.getRobots).toHaveBeenCalled()
     })
     
     const checkbox = screen.getByLabelText(/auto-refresh map/i)
     expect(checkbox).toBeChecked()
     
     await user.click(checkbox)
-    expect(checkbox).not.toBeChecked()
+    
+    await waitFor(() => {
+      expect(checkbox).not.toBeChecked()
+    })
   })
 })
