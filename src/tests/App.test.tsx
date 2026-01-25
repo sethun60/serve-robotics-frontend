@@ -1,5 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import '@testing-library/jest-dom'
 
 // Mock logger to avoid import.meta issues
 jest.mock('../services/logger', () => ({
@@ -86,11 +87,6 @@ describe('App', () => {
     const moveButton = screen.getByText('Move Robots')
     await user.click(moveButton)
     
-    // Wait for the move action to complete and state to update
-    await waitFor(() => {
-      expect(mockRobotService.moveRobots).toHaveBeenCalled()
-    })
-    
     // Give extra time for all state updates to settle
     await waitFor(() => {
       expect(mockRobotService.moveRobots).toHaveBeenCalledTimes(1)
@@ -110,11 +106,6 @@ describe('App', () => {
     
     const resetButton = screen.getByText('Reset Robots')
     await user.click(resetButton)
-    
-    // Wait for the reset action to complete and state to update
-    await waitFor(() => {
-      expect(mockRobotService.resetRobots).toHaveBeenCalled()
-    })
     
     // Give extra time for all state updates to settle
     await waitFor(() => {
