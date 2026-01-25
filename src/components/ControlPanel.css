@@ -1,0 +1,148 @@
+.control-panel {
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+}
+
+.control-section {
+	border: 1px solid #333;
+	border-radius: 8px;
+	padding: 1rem;
+	background-color: #242424;
+}
+
+.control-section h2 {
+	font-size: 1rem;
+	margin: 0 0 1rem 0;
+	color: #999;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	font-weight: 600;
+}
+
+.control-group {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+}
+
+.control-group label {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+	font-size: 0.875rem;
+	color: #ccc;
+}
+
+.control-group input[type="number"] {
+	padding: 0.5rem;
+	border: 1px solid #333;
+	border-radius: 4px;
+	background-color: #1a1a1a;
+	color: white;
+	font-size: 1rem;
+}
+
+.control-group input[type="number"]:focus {
+	outline: 2px solid #646cff;
+	outline-offset: 2px;
+}
+
+.control-group input[type="number"]:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.control-group button {
+	width: 100%;
+	margin-top: 0.5rem;
+}
+
+.button-group {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 0.5rem;
+	margin-top: 0.5rem;
+}
+
+.button-group button {
+	margin-top: 0;
+}
+
+.start-btn {
+	background-color: #4caf50;
+}
+
+.start-btn:hover:not(:disabled) {
+	background-color: #45a049;
+	border-color: #4caf50;
+}
+
+.stop-btn {
+	background-color: #f44336;
+}
+
+.stop-btn:hover:not(:disabled) {
+	background-color: #da190b;
+	border-color: #f44336;
+}
+
+.reset-btn {
+	background-color: #ff9800;
+}
+
+.reset-btn:hover:not(:disabled) {
+	background-color: #e68900;
+	border-color: #ff9800;
+}
+
+.toggle-label {
+	display: flex !important;
+	flex-direction: row !important;
+	align-items: center;
+	gap: 0.5rem;
+	cursor: pointer;
+}
+
+.toggle-label input[type="checkbox"] {
+	width: 20px;
+	height: 20px;
+	cursor: pointer;
+}
+
+.hint {
+	color: #666;
+	font-size: 0.75rem;
+	font-style: italic;
+}
+
+.info-panel {
+	background-color: #1a1a1a;
+	padding: 1rem;
+	border-radius: 8px;
+	border: 1px solid #333;
+	text-align: center;
+}
+
+.info-panel strong {
+	color: #646cff;
+	margin-right: 0.5rem;
+}
+
+/* Accessibility - Focus visible */
+*:focus-visible {
+	outline: 2px solid #646cff;
+	outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+	.control-section {
+		border-width: 2px;
+	}
+
+	.control-group input,
+	button {
+		border-width: 2px;
+	}
+}
