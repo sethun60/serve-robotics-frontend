@@ -1,0 +1,52 @@
+.status-bar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0.75rem 2rem;
+	background-color: #1a1a1a;
+	border-top: 1px solid #333;
+	font-size: 0.875rem;
+	gap: 2rem;
+}
+
+.status-item {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.status-label {
+	color: #999;
+}
+
+.status-value {
+	color: white;
+	font-weight: 500;
+}
+
+.status-indicator {
+	font-weight: 600;
+}
+
+.status-indicator.active {
+	color: #4caf50;
+}
+
+.status-indicator.inactive {
+	color: #666;
+}
+
+/* Responsive design */
+@media (max-width: 640px) {
+	.status-bar {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 0.5rem;
+		padding: 1rem;
+	}
+
+	.status-item {
+		width: 100%;
+		justify-content: space-between;
+	}
+}
