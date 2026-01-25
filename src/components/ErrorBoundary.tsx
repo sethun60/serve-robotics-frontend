@@ -1,26 +1,36 @@
-import { Component } from 'react'
+import { Component, ReactNode, ErrorInfo } from 'react'
 import { logger } from '../services/logger'
 
-class ErrorBoundary extends Component {
-  constructor(props) {
-    super(props)
-    this.state = { hasError: false, error: null, errorInfo: null }
-  }
+interface ErrorBoundaryProps {
+	children: ReactNode
+}
 
-  static getDerivedStateFromError(error) {
-    return { hasError: true }
-  }
+interface ErrorBoundaryState {
+	hasError: boolean
+	error: Error | null
+	errorInfo: ErrorInfo | null
+}
 
-  componentDidCatch(error, errorInfo) {
-    logger.error('React Error Boundary caught an error:', error, errorInfo)
-    this.setState({ error, errorInfo })
-    
-    // In production, send to monitoring service
-    if (import.meta.env.PROD) {
-      // TODO: Send to error tracking service
-      // sendErrorToService(error, errorInfo)
-    }
-  }
+class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+	constructor(props: ErrorBoundaryProps) {
+		super(props)
+		this.state = { hasError: false, error: null, errorInfo: null }
+	}
+
+	static getDerivedStateFromError(_error: Error): Partial<ErrorBoundaryState> {
+		return { hasError: true }
+	}
+
+	componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+		logger.error('React Error Boundary caught an error:', error, errorInfo)
+		this.setState({ error, errorInfo })
+
+		// In production, send to monitoring service
+		if (import.meta.env.PROD) {
+			// TODO: Send to error tracking service
+			// sendErrorToService(error, errorInfo)
+		}
+	}
 
   render() {
     if (this.state.hasError) {

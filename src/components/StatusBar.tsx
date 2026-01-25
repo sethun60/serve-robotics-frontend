@@ -1,10 +1,16 @@
 import './StatusBar.css'
 
-function StatusBar({ robotCount, lastUpdate, autoRefresh }) {
-  const formatTime = (date) => {
-    if (!date) return 'Never'
-    return date.toLocaleTimeString()
-  }
+interface StatusBarProps {
+	robotCount: number
+	lastUpdate: Date | null
+	autoRefresh: boolean
+}
+
+function StatusBar({ robotCount, lastUpdate, autoRefresh }: StatusBarProps) {
+	const formatTime = (date: Date | null): string => {
+		if (!date) return 'Never'
+		return date.toLocaleTimeString()
+	}
 
   return (
     <footer className="status-bar" role="contentinfo" aria-label="Application status">

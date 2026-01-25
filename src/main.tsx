@@ -8,7 +8,7 @@ import { logger } from './services/logger'
 // Initialize logger
 logger.info('Application starting...')
 
-createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ErrorBoundary>
       <App />

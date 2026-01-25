@@ -1,22 +1,35 @@
 import { useState } from 'react'
 import './ControlPanel.css'
 
+interface ControlPanelProps {
+	onMove: (meters: number) => void
+	onReset: (count: number) => void
+	onStartAuto: (meters: number, intervalMs: number) => void
+	onStopAuto: () => void
+	autoRefresh: boolean
+	onAutoRefreshToggle: (enabled: boolean) => void
+	refreshInterval: number
+	onRefreshIntervalChange: (interval: number) => void
+	robotCount: number
+	loading: boolean
+}
+
 function ControlPanel({
-  onMove,
-  onReset,
-  onStartAuto,
-  onStopAuto,
-  autoRefresh,
-  onAutoRefreshToggle,
-  refreshInterval,
-  onRefreshIntervalChange,
-  robotCount,
-  loading
-}) {
-  const [moveMeters, setMoveMeters] = useState(10)
-  const [resetCount, setResetCount] = useState(20)
-  const [autoMeters, setAutoMeters] = useState(1)
-  const [autoInterval, setAutoInterval] = useState(60000)
+	onMove,
+	onReset,
+	onStartAuto,
+	onStopAuto,
+	autoRefresh,
+	onAutoRefreshToggle,
+	refreshInterval,
+	onRefreshIntervalChange,
+	robotCount,
+	loading,
+}: ControlPanelProps) {
+	const [moveMeters, setMoveMeters] = useState(10)
+	const [resetCount, setResetCount] = useState(20)
+	const [autoMeters, setAutoMeters] = useState(1)
+	const [autoInterval, setAutoInterval] = useState(60000)
 
   return (
     <div className="control-panel">
