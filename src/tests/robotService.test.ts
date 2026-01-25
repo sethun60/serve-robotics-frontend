@@ -1,9 +1,20 @@
+// Mock the robot service before importing
+jest.mock("../services/robotService", () => ({
+	robotService: {
+		getRobots: jest.fn(),
+		moveRobots: jest.fn(),
+		resetRobots: jest.fn(),
+		startAutoMove: jest.fn(),
+		stopAutoMove: jest.fn(),
+		clearCache: jest.fn(),
+	}
+}))
+
 import { robotService } from "../services/robotService";
 
 describe("RobotService", () => {
 	beforeEach(() => {
-		// Clear cache before each test
-		robotService.clearCache();
+		jest.clearAllMocks();
 	});
 
 	it("has correct API methods", () => {

@@ -1,34 +1,46 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import App from '../App'
-import { robotService } from '../services/robotService'
 
-// Mock the robot service
-jest.mock('../services/robotService')
+// Mock the robot service before importing
+jest.mock('../services/robotService', () => ({
+  robotService: {
+    getRobots: jest.fn(),
+    moveRobots: jest.fn(),
+    resetRobots: jest.fn(),
+    startAutoMove: jest.fn(),
+    stopAutoMove: jest.fn(),
+    clearCache: jest.fn(),
+  }
+}))
+
+import { robotService } from '../services/robotService'
 
 // Mock Leaflet components
 jest.mock('react-leaflet', () => ({
-  MapContainer: ({ children }) => <div data-testid="map-container">{children}</div>,
+  MapContainer: ({ children }: { children: React.ReactNode }) => <div data-testid="map-container">{children}</div>,
   TileLayer: () => <div data-testid="tile-layer" />,
   Polygon: () => <div data-testid="polygon" />,
-  Marker: ({ children }) => <div data-testid="marker">{children}</div>,
-  Popup: ({ children }) => <div data-testid="popup">{children}</div>,
+  Marker: ({ children }: { children: React.ReactNode }) => <div data-testid="marker">{children}</div>,
+  Popup: ({ children }: { children: React.ReactNode }) => <div data-testid="popup">{children}</div>,
   useMap: () => ({
     fitBounds: jest.fn(),
   }),
 }))
+
+const mockRobotService = robotService as jest.Mocked<typeof robotService>
 
 describe('App', () => {
   const mockRobots = {
     robots: [
       [34.0412, -118.2501],
       [34.0325, -118.2389],
-    ],
+    ] as [number, number][],
   }
 
   beforeEach(() => {
     jest.clearAllMocks()
-    robotService.getRobots.mockResolvedValue(mockRobots)
+    mockRobotService.getRobots.mockResolvedValue(mockRobots)
   })
 
   it('renders the app header', async () => {
@@ -40,13 +52,13 @@ describe('App', () => {
     render(<App />)
     
     await waitFor(() => {
-      expect(robotService.getRobots).toHaveBeenCalled()
+      expect(mockRobotService.getRobots).toHaveBeenCalled()
     })
   })
 
   it('handles move robots action', async () => {
     const user = userEvent.setup()
-    robotService.moveRobots.mockResolvedValue(mockRobots)
+    mockRobotService.moveRobots.mockResolvedValue(mockRobots)
     
     render(<App />)
     
@@ -58,13 +70,13 @@ describe('App', () => {
     await user.click(moveButton)
     
     await waitFor(() => {
-      expect(robotService.moveRobots).toHaveBeenCalled()
+      expect(mockRobotService.moveRobots).toHaveBeenCalled()
     })
   })
 
   it('handles reset robots action', async () => {
     const user = userEvent.setup()
-    robotService.resetRobots.mockResolvedValue(mockRobots)
+    mockRobotService.resetRobots.mockResolvedValue(mockRobots)
     
     render(<App />)
     
@@ -76,12 +88,12 @@ describe('App', () => {
     await user.click(resetButton)
     
     await waitFor(() => {
-      expect(robotService.resetRobots).toHaveBeenCalled()
+      expect(mockRobotService.resetRobots).toHaveBeenCalled()
     })
   })
 
   it('displays error message when API fails', async () => {
-    robotService.getRobots.mockRejectedValue(new Error('Network error'))
+    mockRobotService.getRobots.mockRejectedValue(new Error('Network error'))
     
     render(<App />)
     
