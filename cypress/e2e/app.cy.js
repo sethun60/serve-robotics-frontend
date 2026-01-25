@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 describe("Robot Visualization App", () => {
 	beforeEach(() => {
 		// Intercept API calls
