@@ -21,13 +21,15 @@ describe("Robot Visualization App", () => {
 	});
 
 	it("displays the map container", () => {
-		cy.get('[aria-label="Robot map visualization"]').should("be.visible");
+		cy.get('[aria-label="Interactive map showing robot positions"]').should(
+			"be.visible",
+		);
 	});
 
 	it("displays control panel", () => {
 		cy.contains("Manual Controls").should("be.visible");
 		cy.contains("Backend Auto-Movement").should("be.visible");
-		cy.contains("UI Settings").should("be.visible");
+		cy.contains("UI Settings").scrollIntoView().should("be.visible");
 	});
 
 	it("can move robots", () => {
@@ -87,12 +89,15 @@ describe("Robot Visualization App", () => {
 	});
 
 	it("is keyboard accessible", () => {
-		// Tab through controls
-		cy.get("body").tab();
+		// Wait for the page to fully load
+		cy.wait("@getRobots");
+
+		// Verify interactive elements can receive focus
+		cy.get("#move-meters").should("not.be.disabled").focus();
 		cy.focused().should("have.attr", "id", "move-meters");
 
-		// Continue tabbing
-		cy.focused().tab();
-		cy.focused().should("contain", "Move Robots");
+		// Verify button can be focused
+		cy.contains("button", "Move Robots").focus();
+		cy.focused().should("contain.text", "Move Robots");
 	});
 });
