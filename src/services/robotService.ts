@@ -15,12 +15,6 @@ interface AutoMoveResponse {
 	intervalMs?: number
 }
 
-interface Cache {
-	data: RobotsResponse | null
-	timestamp: number | null
-	ttl: number
-}
-
 // Create axios instance with defaults
 const apiClient: AxiosInstance = axios.create({
 	baseURL: API_BASE_URL,
@@ -29,13 +23,6 @@ const apiClient: AxiosInstance = axios.create({
 		'Content-Type': 'application/json',
 	},
 })
-
-// Simple in-memory cache
-const cache: Cache = {
-	data: null,
-	timestamp: null,
-	ttl: 2000, // 2 seconds TTL
-}
 
 // Request interceptor for logging
 apiClient.interceptors.request.use(
@@ -67,44 +54,20 @@ apiClient.interceptors.response.use(
 )
 
 export const robotService = {
-	// Get all robots (with caching)
-	async getRobots(useCache = true): Promise<RobotsResponse> {
-		const now = Date.now()
-
-		// Return cached data if valid
-		if (
-			useCache &&
-			cache.data &&
-			cache.timestamp &&
-			now - cache.timestamp < cache.ttl
-		) {
-			console.log('[API] Using cached robots data')
-			return cache.data
-		}
-
+	// Get all robots
+	async getRobots(): Promise<RobotsResponse> {
 		const response = await apiClient.get<RobotsResponse>('/robots')
-
-		// Update cache
-		cache.data = response.data
-		cache.timestamp = now
-
 		return response.data
 	},
 
 	// Move all robots
 	async moveRobots(meters = 1): Promise<RobotsResponse> {
-		// Invalidate cache
-		cache.data = null
-
 		const response = await apiClient.post<RobotsResponse>('/move', { meters })
 		return response.data
 	},
 
 	// Reset robots
 	async resetRobots(count = 20): Promise<RobotsResponse> {
-		// Invalidate cache
-		cache.data = null
-
 		const response = await apiClient.post<RobotsResponse>('/reset', { count })
 		return response.data
 	},
@@ -122,11 +85,5 @@ export const robotService = {
 	async stopAutoMove(): Promise<AutoMoveResponse> {
 		const response = await apiClient.post<AutoMoveResponse>('/stop-auto')
 		return response.data
-	},
-
-	// Clear cache manually
-	clearCache(): void {
-		cache.data = null
-		cache.timestamp = null
 	},
 }
